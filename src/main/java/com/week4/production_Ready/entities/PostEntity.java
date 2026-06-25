@@ -2,6 +2,8 @@ package com.week4.production_Ready.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Audited
 public class PostEntity extends Auditable {
 
     @Id
@@ -24,6 +26,7 @@ public class PostEntity extends Auditable {
 
     private String title;
 
+    //@NotAudited
     private String description;
 
     @CreatedBy
