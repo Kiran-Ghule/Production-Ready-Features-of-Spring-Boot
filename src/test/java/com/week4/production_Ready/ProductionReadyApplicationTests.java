@@ -23,7 +23,7 @@ class ProductionReadyApplicationTests {
 
 	@Test
 	void getEmployeeById() {
-		System.out.println(employeeClient.getEmployeeById(1L));
+		System.out.println(employeeClient.getEmployeeById(10L));
 	}
 
 	@Test
