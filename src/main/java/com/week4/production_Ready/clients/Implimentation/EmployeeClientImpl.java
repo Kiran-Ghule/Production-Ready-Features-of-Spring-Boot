@@ -5,6 +5,8 @@ import com.week4.production_Ready.Exception.ResourceNotFound;
 import com.week4.production_Ready.clients.EmployeeClient;
 import com.week4.production_Ready.dtos.EmployeeDTO;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +18,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeClientImpl implements EmployeeClient {
 
+
+    Logger logger = LoggerFactory.getLogger(EmployeeClientImpl.class);
+
     private final RestClient restClient;
 
     @Override
     public List<EmployeeDTO> getAllEmployee() {
+        logger.info("getAllEmployee Called");
         try {
             ResponseApi<List<EmployeeDTO>> employees = restClient.get()
                     .uri("/MyEmployees/Get/All")
                     .retrieve()
                     .body(new ParameterizedTypeReference<>() {
                     });
+            logger.debug("Successfully Retrieve All Employees");
+            logger.trace("Retrieved Employees by getEmployees : {}",employees.getData());
             return employees.getData();
+
         }
         catch(Exception e)
         {
+            logger.error("Error Occurred at GetAllEmployee",e);
            throw new RuntimeException(e);
         }
     }
@@ -42,7 +52,7 @@ public class EmployeeClientImpl implements EmployeeClient {
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError,(req,res)->
                     {
-                        System.out.println(new String(res.getBody().readAllBytes()));
+                        logger.error(new String(res.getBody().readAllBytes()));
                         throw new ResourceNotFound("Employee Not Found with id: "+empid);
                     })
                     .body(new ParameterizedTypeReference<>() {
